@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_app
+    container_name: crazywolf_app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
@@ -14,7 +14,7 @@ services:
 
   webserver:
     image: nginx:alpine
-    container_name: laravel_nginx
+    container_name: crazywolf_nginx
     restart: unless-stopped
     ports:
       - "8001:80"
