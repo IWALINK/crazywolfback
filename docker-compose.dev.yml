@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - laravel_network
+
+  webserver:
+    image: nginx:alpine
+    container_name: laravel_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - laravel_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+       MYSQL_DATABASE: ${DB_DATABASE}
+       MYSQL_USER: ${DB_USERNAME}
+       MYSQL_PASSWORD: ${DB_PASSWORD}
+       SERVICE_TAGS: dev
+       SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    command:
+      -  --character-set-server=utf8mb4 
+      -  --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - laravel_network
+
+networks:
+  laravel_network:
+    driver: bridge 
