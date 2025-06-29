@@ -22,7 +22,7 @@ services:
     volumes:
       - ./:/var/www
       - ./docker/nginx/public.conf:/etc/nginx/conf.d/public.conf
-      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./docker/ssl:/etc/nginx/ssl
     networks:
       - crazywolf_network
 
